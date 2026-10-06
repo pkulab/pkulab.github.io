@@ -1,0 +1,11 @@
+import type {Metadata} from 'next';
+import {notFound} from 'next/navigation';
+import {findPost,listPosts} from '@/lib/content';
+import {Header,Footer} from '@/app/ui/shell';
+import {Article} from '@/app/ui/article';
+export const dynamicParams=false;
+export function generateStaticParams(){return listPosts().map(post=>({slug:post.slug}))}
+type Props={params:Promise<{slug:string}>};
+export async function generateMetadata({params}:Props):Promise<Metadata>{const {slug}=await params;const post=await findPost(slug);return post?.status==='published'?{title:post.title,description:post.summary}:{title:'文章未找到'}}
+export default async function PostPage({params}:Props){const {slug}=await params;const post=await findPost(slug);if(!post||post.status!=='published')notFound();const related=post.options?.related?.length?(await listPosts()).filter(p=>post.options!.related!.includes(p.slug)&&p.id!==post.id).slice(0,3):[];return <><Header active="notes"/><main id="main" className="site-width paper"><Article post={post} related={related}/></main><Footer/></>}
+

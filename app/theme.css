@@ -1,0 +1,12 @@
+/* 全站配色、字体与阅读尺寸。 */
+:root {
+color-scheme:light;
+--background:#e9edf0;--foreground:#26333c;--card:#fff;--card-foreground:var(--foreground);--popover:#fff;--popover-foreground:var(--foreground);
+--primary:#226067;--primary-hover:#153f47;--primary-foreground:#fff;--secondary:#eef3f4;--secondary-foreground:#314b54;--muted:#f5f7f8;--muted-foreground:#61717c;--accent:#e7f0f0;--accent-foreground:#234c55;
+--destructive:#9c3642;--error-bg:#fff1f2;--error-border:#d9afb5;--success:#286545;--success-bg:#edf5ef;--warning:#76581d;--warning-bg:#faf4e7;--info:#325977;--info-bg:#eff4f8;
+--border:#d5dee2;--input:#c5d1d7;--ring:#226067;--paper-rule:#9aacb3;--card-tint:#f3f6f6;--code-bg:#f3f5f6;--selection:#d3e7e7;--selection-text:#153f47;--overlay:#172a35cc;--plot-grid:#dce4e7;--plot-reference:#987134;--radius:.25rem;
+--font-body:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;
+/* 中文回退为系统宋体/明朝体，保持系统等宽栈。 */
+--font-reading:ui-monospace,"Cascadia Mono","SFMono-Regular",Consolas,"Noto Sans Mono CJK SC","NSimSun","SimSun","Songti SC",monospace;--font-mono:var(--font-reading);
+--paper-width:1180px;--reading-width:748px;--body-size:1.0625rem;--body-leading:1.95;--title-size:2.3rem;--h2-size:1.5rem;--h3-size:1.18rem;--aux-size:.875rem;--paragraph-gap:1.15em;--section-gap:2.3em;--mobile-gutter:20px;--card-padding:24px;--card-gap:16px;
+}

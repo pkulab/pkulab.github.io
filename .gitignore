@@ -1,0 +1,9 @@
+node_modules/
+.next/
+out/
+.generated/
+app/posts/
+public/downloads/*.md
+*.tsbuildinfo
+.env*
+.DS_Store

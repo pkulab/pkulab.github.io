@@ -1,0 +1,5 @@
+import {Search} from 'lucide-react';
+import {siteConfig} from '@/lib/site-config';
+import {BackToTop} from './back-to-top';
+export function Header({active}:{active?:string}){return <header className="site-header"><a className="skip-link" href="#main">跳到正文</a><div className="site-width header-inner"><a className="identity" href="/" aria-label="未竟首页"><span className="site-mark" aria-hidden="true">∂</span><span className="wordmark">未竟</span><span className="identity-note">RESEARCH NOTEBOOK</span></a><nav aria-label="主导航" className="site-nav"><a href="/" aria-current={active==='notes'?'page':undefined}>文章</a><a href="/search/" aria-current={active==='search'?'page':undefined}><Search size={15}/>搜索</a></nav></div></header>}
+export function Footer(){return <><footer className="site-width site-footer"><p>© {new Date().getFullYear()} 未竟 · 文章版权归各自作者所有</p><p>转载或使用内容，请与相应文章作者确认授权。</p><div className="footer-links"><a href="/feed.xml">RSS 订阅</a><a href={siteConfig.sourceUrl} target="_blank" rel="noreferrer">网站源码</a></div></footer><BackToTop/></>}

@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {parseArticle,loadArticles,makeFeed} from '../scripts/content.mjs';
+const article=(extra='')=>'---\ntitle: 研究记录\ndate: "2026-10-06"\nauthors:\n  - name: 作者\n'+extra+'---\n## 结论\n正文与 $x^2$。\n';
+test('draft and sample files do not enter public output',()=>{assert.equal(parseArticle(article('draft: true\n'),'draft.md'),null);assert.equal(parseArticle(article('sample: true\n'),'demo.md'),null);assert.equal(parseArticle(article('status: draft\n'),'draft.md'),null)});
+test('a publishable article retains content, author and layout options',()=>{const post=parseArticle(article('tableStyle: grid\nshowToc: false\n'),'first-note.md');assert.equal(post.slug,'first-note');assert.equal(post.options.authors[0].name,'作者');assert.equal(post.options.tableStyle,'grid');assert.equal(post.options.showToc,false);assert.match(post.content,/\$x\^2\$/)});
+test('invalid dates, unsafe paths and invalid author links fail the build',()=>{assert.throws(()=>parseArticle(article().replace('2026-10-06','2026-02-30'),'note.md'));assert.throws(()=>parseArticle(article('slug: ../../hidden\n'),'note.md'));assert.throws(()=>parseArticle(article('options:\n  authors:\n    - name: Author\n      url: javascript:alert(1)\n').replace('authors:\n  - name: 作者\n',''),'note.md'))});
+test('duplicate slugs fail instead of overwriting an article',()=>{const dir=fs.mkdtempSync(path.join(os.tmpdir(),'pkulab-content-'));try{fs.writeFileSync(path.join(dir,'one.md'),article('slug: same\n'));fs.writeFileSync(path.join(dir,'two.md'),article('slug: same\n'));assert.throws(()=>loadArticles(dir),/slug 重复/)}finally{for(const name of fs.readdirSync(dir))fs.unlinkSync(path.join(dir,name));fs.rmdirSync(dir)}});
+test('empty content remains empty and RSS is valid XML text',()=>{assert.deepEqual(loadArticles(path.join(os.tmpdir(),'pkulab-absent-content-directory')),[]);const feed=makeFeed([parseArticle(article('summary: "A & B < C"\n'),'note.md')]);assert.match(feed,/A &amp; B &lt; C/);assert.match(feed,/https:\/\/pkulab.github.io\/posts\/note\//)});

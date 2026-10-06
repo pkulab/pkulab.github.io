@@ -1,0 +1,2 @@
+export function Masthead(){return <section className="masthead"><div><p className="eyebrow">未竟 / 研究者的共同手记</p><h1>在推导与实验之间，<br/>记录理解的过程。</h1><p className="intro">机器学习、大模型预训练，以及公式背后的直觉。</p></div><div className="research-sketch" role="img" aria-label="研究过程示意：问题、推导、实验、再思考"><div className="research-step"><span>?</span><small>问题</small></div><div className="research-step"><span>∇</span><small>推导</small></div><div className="research-step"><span>ƒ</span><small>实验</small></div><div className="research-step"><span>↺</span><small>再思考</small></div></div></section>}
+

@@ -1,0 +1,22 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {loadArticles,makeFeed} from './content.mjs';
+
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const write=(file,text)=>{const dest=path.join(root,file);fs.mkdirSync(path.dirname(dest),{recursive:true});fs.writeFileSync(dest,text,'utf8')};
+const records=loadArticles(path.join(root,'content/posts'));
+const posts=records.map(record=>record.post);
+write('.generated/posts.json',JSON.stringify(posts,null,2)+'\n');
+write('public/feed.xml',makeFeed(posts));
+write('public/sitemap.xml','<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+['/',...posts.map(post=>'/posts/'+post.slug+'/')].map(route=>'<url><loc>https://pkulab.github.io'+route+'</loc></url>').join('')+'</urlset>\n');
+const downloads=path.resolve(root,'public/downloads');
+if(!downloads.startsWith(root+path.sep))throw new Error('Invalid output directory');
+fs.mkdirSync(downloads,{recursive:true});
+for(const name of fs.readdirSync(downloads))if(/^[a-z0-9]+(?:-[a-z0-9]+)*\.md$/.test(name)&&fs.lstatSync(path.join(downloads,name)).isFile())fs.unlinkSync(path.join(downloads,name));
+for(const {post,source} of records)write('public/downloads/'+post.slug+'.md',source);
+const route=path.resolve(root,'app/posts/[slug]/page.tsx');
+if(!route.startsWith(root+path.sep))throw new Error('Invalid generated route');
+if(posts.length)write('app/posts/[slug]/page.tsx',fs.readFileSync(path.join(root,'scripts/post-page.template'),'utf8'));
+else if(fs.existsSync(route))fs.unlinkSync(route);
+console.log('Prepared '+posts.length+' published articles.');
